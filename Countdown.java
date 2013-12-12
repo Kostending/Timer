@@ -102,6 +102,8 @@ public class Countdown {
             timer.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent event) {
                     if (counter.getCounter() == 0) {
+                        counter.setCounter(minutes, seconds);
+                        timerDisplay.setText(counter.toString());
                         timer.stop();
                     }
                     else {
@@ -116,6 +118,9 @@ public class Countdown {
                     if (timer.isRunning()) {
                         counter.setCounter(minutes, seconds);
                         timerDisplay.setText(counter.toString());
+                    }
+                    else if (!timer.isRunning()) {
+                        timer.restart();
                     }
                     else {
                         timer.start();
