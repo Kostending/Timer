@@ -102,7 +102,7 @@ public class Countdown {
             timer.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent event) {
                     if (counter.getCounter() == 0) {
-                        timer.interrupt();
+                        timer.stop();
                     }
                     else {
                         counter.decrement();
