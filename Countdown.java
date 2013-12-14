@@ -3,7 +3,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.Timer;
-import javax.swing.text.DefaultFormatter;
+//import javax.swing.text.DefaultFormatter;
+import javax.swing.text.MaskFormatter;
 
 public class Countdown {
 
@@ -61,10 +62,10 @@ public class Countdown {
     private static void addConstructer(final JPanel constructor, final JFrame frame) {
         JButton createButton = new JButton("Create Timer");
         
-        DefaultFormatter format = new DefaultFormatter();
-        format.setOverwriteMode(false);
-        final JFormattedTextField input = new JFormattedTextField(format);
-        input.setValue("00:00");
+        //DefaultFormatter format = new DefaultFormatter();
+        //format.setOverwriteMode(false);
+        final JFormattedTextField input = new JFormattedTextField(createFormatter("##:##"));
+        input.setText("00:00");
         
         final JTextField description = new JTextField(FIELD_WIDTH);
         
@@ -81,6 +82,17 @@ public class Countdown {
         constructor.add(createButton);
         constructor.add(input);
         constructor.add(description);
+    }
+
+    private static MaskFormatter createFormatter(String format) {
+        MaskFormatter formatter = null;
+        try {
+            formatter = new MaskFormatter(format);
+        } catch (java.text.ParseException exc) {
+            System.err.println("Formatter is bad: " + exc.getMessage());
+            System.exit(-1);
+        }
+        return formatter;
     }
 
     private static void addTimer(String description, final String input, final JFrame frame) {
