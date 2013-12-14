@@ -3,7 +3,6 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.Timer;
-//import javax.swing.text.DefaultFormatter;
 import javax.swing.text.MaskFormatter;
 
 public class Countdown {
@@ -62,8 +61,6 @@ public class Countdown {
     private static void addConstructer(final JPanel constructor, final JFrame frame) {
         JButton createButton = new JButton("Create Timer");
         
-        //DefaultFormatter format = new DefaultFormatter();
-        //format.setOverwriteMode(false);
         final JFormattedTextField input = new JFormattedTextField(createFormatter("##:##"));
         input.setText("00:00");
         
@@ -156,4 +153,3 @@ public class Countdown {
         }
     }
 }
-
