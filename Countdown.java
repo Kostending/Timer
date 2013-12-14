@@ -3,6 +3,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.Timer;
+import javax.swing.text.DefaultFormatter;
 
 public class Countdown {
 
@@ -54,49 +55,54 @@ public class Countdown {
         final JPanel constructor = new JPanel();
 
         addConstructer(constructor, frame);
-
         frame.add(constructor);
     }
 
     private static void addConstructer(final JPanel constructor, final JFrame frame) {
         JButton createButton = new JButton("Create Timer");
-        final JTextField inputMinutes = new JTextField(FIELD_WIDTH);
-        final JTextField inputSeconds = new JTextField(FIELD_WIDTH);
+        
+        DefaultFormatter format = new DefaultFormatter();
+        format.setOverwriteMode(false);
+        final JFormattedTextField input = new JFormattedTextField(format);
+        input.setValue("00:00");
+        
+        final JTextField description = new JTextField(FIELD_WIDTH);
         
         createButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent event) {
                     addTimer(
-                        "Start", 
-                        inputMinutes.getText(),
-                        inputSeconds.getText(), 
+                        description.getText(),
+                        input.getText(),
                         frame
                     );
                 }
             });
 
         constructor.add(createButton);
-        constructor.add(inputMinutes);
-        constructor.add(inputSeconds);
+        constructor.add(input);
+        constructor.add(description);
     }
 
-    private static void addTimer(String buttonName, final String inputMinutes, final String inputSeconds, final JFrame frame) {
-        if (inputMinutes.equals("") || inputSeconds.equals("")) {
-            return;
-        }
-
+    private static void addTimer(String description, final String input, final JFrame frame) {
+        String[] str_array = input.split(":");
+        
         try {
-            final int minutes = Integer.parseInt(inputMinutes);
-            final int seconds = Integer.parseInt(inputSeconds);
+            final int minutes = Integer.parseInt(str_array[0]);
+            final int seconds = Integer.parseInt(str_array[1]);
 
             final Counter counter = new Counter(minutes, seconds);
             final Timer timer = new Timer(1000, null);
 
             JPanel timerPanel = new JPanel();
-            JButton startButton = new JButton(buttonName);
+            JButton startButton = new JButton("Start");
             final JTextField timerDisplay = new JTextField(FIELD_WIDTH);
+            timerDisplay.setEditable(false);
+            JLabel timerDescription = new JLabel(description);
+            timerDescription.setBackground(Color.RED);
 
             timerPanel.add(startButton);
             timerPanel.add(timerDisplay);
+            timerPanel.add(timerDescription);
             
             timer.setInitialDelay(0);
             timer.addActionListener(new ActionListener() {
@@ -126,7 +132,7 @@ public class Countdown {
                         timer.start();
                     }
                 }
-            }); 
+            });
 
             timerDisplay.setText(counter.toString());
 
@@ -138,3 +144,4 @@ public class Countdown {
         }
     }
 }
+
