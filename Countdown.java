@@ -4,6 +4,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.Timer;
 import javax.swing.text.MaskFormatter;
+import java.io.*;
+import javax.sound.sampled.*;
 
 public class Countdown {
 
@@ -56,6 +58,13 @@ public class Countdown {
 
         addConstructer(constructor, frame);
         frame.add(constructor);
+
+        addTimer("Our Blue", "05:00", "blue.wav", frame);
+        addTimer("Our Red", "05:00", "red.wav", frame);
+        addTimer("Their Blue", "05:00", "blue.wav", frame);
+        addTimer("Their Red", "05:00", "red.wav", frame);
+        addTimer("Dragon", "06:00", "dragon.wav", frame);
+        addTimer("Baron", "07:00", "baron.wav", frame);
     }
 
     private static void addConstructer(final JPanel constructor, final JFrame frame) {
@@ -65,12 +74,14 @@ public class Countdown {
         input.setText("00:00");
         
         final JTextField description = new JTextField(FIELD_WIDTH);
+        final JTextField soundInput = new JTextField(FIELD_WIDTH);
         
         createButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent event) {
                     addTimer(
                         description.getText(),
                         input.getText(),
+                        soundInput.getText(),
                         frame
                     );
                 }
@@ -79,6 +90,7 @@ public class Countdown {
         constructor.add(createButton);
         constructor.add(input);
         constructor.add(description);
+        constructor.add(soundInput);
     }
 
     private static MaskFormatter createFormatter(String format) {
@@ -92,7 +104,7 @@ public class Countdown {
         return formatter;
     }
 
-    private static void addTimer(String description, final String input, final JFrame frame) {
+    private static void addTimer(String description, final String input, final String soundName, final JFrame frame) {
         String[] str_array = input.split(":");
         
         try {
@@ -101,6 +113,8 @@ public class Countdown {
 
             final Counter counter = new Counter(minutes, seconds);
             final Timer timer = new Timer(1000, null);
+
+            final File filename = new File(Countdown.class.getProtectionDomain().getCodeSource().getLocation().getPath() + soundName);
 
             JPanel timerPanel = new JPanel();
             JButton startButton = new JButton("Start");
@@ -117,6 +131,7 @@ public class Countdown {
             timer.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent event) {
                     if (counter.getCounter() == 0) {
+                        playSound(filename);
                         counter.setCounter(minutes, seconds);
                         timerDisplay.setText(counter.toString());
                         timer.stop();
@@ -150,6 +165,21 @@ public class Countdown {
         }
         catch (NumberFormatException exception) {
             return;
+        }
+    }
+
+    /*
+    * Plays the sound that are equals to the countdown
+    */
+    public static void playSound(final File filename) {
+        try {
+            Clip clip = AudioSystem.getClip();
+            AudioInputStream inputStream = AudioSystem.getAudioInputStream(filename);
+            clip.open(inputStream);
+            clip.start();
+        }
+        catch (Exception e) {
+            System.err.println(e.getMessage());
         }
     }
 }
